@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve example application
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory={{ deploy_folder }}
+Environment="INSTANCE_PATH={{ instance_path }}"
+ExecStart={{ deploy_folder }}/venv/bin/gunicorn -b 0.0.0.0:{{ app_port }} wsgi:app
+
+[Install]
+WantedBy=multi-user.target

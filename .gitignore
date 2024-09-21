@@ -1,0 +1,12 @@
+# Ignore vault password file
+vault_password_file
+
+# Ignore any files that may contain sensitive data
+group_vars/all.yml
+
+# Ignore virtual environment directory
+venv/
+
+# Ignore any log files
+*.log
+

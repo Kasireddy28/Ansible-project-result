@@ -1,0 +1,11 @@
+---
+- name: Configure CA Certificates and Deploy Python Application
+  hosts: localhost
+  become: true
+  vars_files:
+    - group_vars/all.yml
+
+  roles:
+    - ca_certificates
+    - deploy_application
+

@@ -1,0 +1,40 @@
+---
+- name: Ensure custom CA certificates directory exists
+  file:
+    path: /etc/ssl/certs/custom
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy custom CA certificates to target hosts
+  copy:
+    src: "{{ item }}"
+    dest: /etc/ssl/certs/custom/
+    owner: root
+    group: root
+    mode: '0644'
+  loop: "{{ custom_ca_certificates }}"
+
+- name: Validate custom CA certificates
+  command: openssl x509 -in /etc/ssl/certs/custom/{{ item }} -noout -checkend 0
+  register: cert_validation
+  ignore_errors: true
+  loop: "{{ custom_ca_certificates }}"
+
+- name: Fail if any custom CA certificate is invalid or expired
+  fail:
+    msg: "Certificate {{ item.item }} is invalid or expired."
+  when: item.rc != 0
+  loop: "{{ cert_validation.results }}"
+
+- name: Remove expired custom CA certificates
+  file:
+    path: "/etc/ssl/certs/custom/{{ item.item }}"
+    state: absent
+  when: item.rc != 0
+  loop: "{{ cert_validation.results }}"
+
+- name: Update the system CA certificates
+  command: update-ca-certificates
+

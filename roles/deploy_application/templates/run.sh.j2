@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export INSTANCE_PATH="{{ instance_path }}"
+exec {{ deploy_folder }}/venv/bin/gunicorn -b 0.0.0.0:{{ app_port }} wsgi:app
