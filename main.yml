@@ -37,3 +37,4 @@
 
 - name: Update the system CA certificates
   command: update-ca-certificates
+
